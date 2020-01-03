@@ -6,6 +6,7 @@ import tensorflow as tf
 
 
 def gaussian(mu, sigma):
+    # the 0.4 scales the maximum to 1 (eyeballed)
     scaling_constant = 1 / (np.sqrt(2 * np.pi) * sigma * 0.4)
     scaling_constant = K.variable(value=scaling_constant, dtype="float32", name="scaling_constant")
     mu = K.variable(value=mu, dtype="float32", name="mu")
@@ -24,6 +25,7 @@ def gaussian(mu, sigma):
 
 def xor_model():
     input_layer = Input(shape=(2,))
+    # mean has to be positive
     output_layer = Dense(1, activation=gaussian(1, 1))(input_layer)
     model = Model(input_layer, output_layer)
     model.compile(optimizer='adam', loss="mse", metrics=["accuracy"])
@@ -31,6 +33,7 @@ def xor_model():
 
 
 def train_xor():
+    # no train test split because I'm lazy
     model = xor_model()
 
     X = np.random.randint(0, 2, (10000, 2))
